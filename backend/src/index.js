@@ -22,7 +22,10 @@ const PORT = process.env.PORT || 5003;
 app.use(cors({
     origin: process.env.FRONTEND_URL,
     credentials: true,
-    sameSite: 'none',
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    exposedHeaders: ["Set-Cookie"],
+    sameSite: "none",
     secure: true
 }));
 
@@ -33,13 +36,13 @@ app.use(cookieParser());
 
 // Session middleware
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'your-secret-key',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: process.env.NODE_ENV === 'production',
-        httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+        secure: true,
+        sameSite: "none",
+        maxAge: 24 * 60 * 60 * 1000
     }
 }));
 
