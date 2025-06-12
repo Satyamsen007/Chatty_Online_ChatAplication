@@ -22,11 +22,8 @@ const PORT = process.env.PORT || 5003;
 app.use(cors({
     origin: process.env.FRONTEND_URL,
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization", "Accept", "Origin", "X-Requested-With"],
-    exposedHeaders: ["Set-Cookie"],
-    preflightContinue: true,
-    optionsSuccessStatus: 200
+    sameSite: 'none',
+    secure: true
 }));
 
 // Middleware
