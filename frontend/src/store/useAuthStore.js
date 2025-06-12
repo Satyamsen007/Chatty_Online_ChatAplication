@@ -14,9 +14,7 @@ export const useAuthStore = create((set, get) => ({
     socket: null,
     checkAuth: async () => {
         try {
-            const response = await axiosInstance.get('/auth/current-user', {
-                withCredentials: true,
-            });
+            const response = await axiosInstance.get('/auth/current-user');
             set({ authUser: response.data.data });
             get().connectSocket();
         } catch (error) {
