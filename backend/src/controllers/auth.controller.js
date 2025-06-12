@@ -79,7 +79,7 @@ export const signUp = asyncHandler(async (req, res, next) => {
                 httpOnly: true,
                 secure: process.env.NODE_ENV !== "development",
                 maxAge: 4 * 24 * 60 * 60 * 1000,
-                sameSite: "strict"
+                sameSite: process.env.NODE_ENV === "development" ? "lax" : "none",
             })
             .json(
                 new ApiResponse(201, newUser, "User created successfully")
@@ -109,7 +109,7 @@ export const login = asyncHandler(async (req, res, next) => {
             httpOnly: true,
             secure: process.env.NODE_ENV !== "development",
             maxAge: 4 * 24 * 60 * 60 * 1000,
-            sameSite: "strict"
+            sameSite: process.env.NODE_ENV === "development" ? "lax" : "none",
         })
         .json(new ApiResponse(200, user, "User logged in successfully"));
 });
@@ -119,7 +119,7 @@ export const logout = asyncHandler(async (req, res, next) => {
     res.clearCookie('token', {
         httpOnly: true,
         secure: process.env.NODE_ENV !== "development",
-        sameSite: "strict"
+        sameSite: process.env.NODE_ENV === "development" ? "lax" : "none",
     });
     res.status(200).json(new ApiResponse(200, null, "User logged out successfully"));
 });
