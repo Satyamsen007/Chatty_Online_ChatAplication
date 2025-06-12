@@ -3,9 +3,6 @@ import jwt from "jsonwebtoken"
 import { asyncHandler } from "../helper/asyncHandler.js"
 import User from "../models/user.model.js"
 import ApiError from "../helper/ApiError.js"
-import { configDotenv } from "dotenv";
-
-configDotenv();
 
 export const isAuthenticated = asyncHandler(async (req, _, next) => {
     try {
