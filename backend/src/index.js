@@ -21,12 +21,7 @@ const PORT = process.env.PORT || 5003;
 // CORS Configuration
 app.use(cors({
     origin: process.env.FRONTEND_URL,
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    exposedHeaders: ["Set-Cookie"],
-    sameSite: "none",
-    secure: true
+    credentials: true
 }));
 
 // Middleware
