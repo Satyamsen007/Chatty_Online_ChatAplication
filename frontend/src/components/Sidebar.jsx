@@ -12,7 +12,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom'
 import { useGroupChatStore } from '../store/useGroupChatStore';
 import GroupSkeleton from './skeletons/GroupSkeleton';
-
+import FriendSkeleton from './skeletons/FriendSkeleton';
 const Sidebar = () => {
   const { getUsers, users, selectedUser, isUsersLoading, setSelectedUser } = useChatStore();
   const { setSelectedGroup, selectedGroup } = useGroupChatStore();
@@ -26,7 +26,8 @@ const Sidebar = () => {
     getFriends,
     initializeSocketListeners,
     sentFriendRequests,
-    getSentFriendRequests
+    getSentFriendRequests,
+    isFriendsLoading
   } = useFriendStore();
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
   const [isCreateGroupModalOpen, setIsCreateGroupModalOpen] = useState(false);
@@ -44,16 +45,18 @@ const Sidebar = () => {
     getSentFriendRequests();
     getGroups();
     initializeSocketListeners();
-
-
   }, [getUsers, getFriendRequests, getFriends, getSentFriendRequests, getGroups, initializeSocketListeners]);
 
   // Load groups when switching to groups tab
   useEffect(() => {
     if (activeTab === 'groups') {
       getGroups();
+    } else if (activeTab === 'friends') {
+      getFriends();
+    } else if (activeTab === 'all') {
+      getUsers();
     }
-  }, [activeTab, getGroups]);
+  }, [activeTab, getGroups, getFriends]);
 
   const handleSendFriendRequest = async (userId) => {
     if (sendingRequestTo === userId) return;
@@ -91,9 +94,184 @@ const Sidebar = () => {
     group.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  if (isUsersLoading) {
-    return <SidebarSkeleton />;
-  }
+  const searchFilteredFreinds = displayUsers.filter(friend =>
+    friend.fullName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const renderTabContent = () => {
+    if (activeTab === 'groups') {
+      if (isGroupsLoading) return <GroupSkeleton />;
+      if (searchFilteredGroups.length === 0) {
+        return (
+          <div className="flex flex-col items-center justify-center p-8 text-center">
+            <UsersRound className="size-16 text-base-content/30 mb-4" />
+            <h3 className="text-lg font-semibold mb-2">No Groups Found</h3>
+            <p className="text-base-content/70 text-sm">
+              Create a new group to start chatting
+            </p>
+          </div>
+        );
+      }
+      return searchFilteredGroups.map((group) => (
+        <div
+          key={group._id}
+          className="w-full p-3 flex items-center gap-3 hover:bg-base-300 transition-colors cursor-pointer"
+          onClick={() => {
+            setSelectedGroup(group);
+            setIsSidebarOpen(false);
+          }}
+        >
+          <div className='relative'>
+            <img
+              src={group.groupPicture || '/avatar.png'}
+              alt={group.name}
+              className='size-12 rounded-full object-cover'
+            />
+          </div>
+          <div className='text-left min-w-0'>
+            <div className='font-medium truncate'>{group.name}</div>
+            <div className='text-sm text-base-content/70'>
+              {group.members.length} members
+            </div>
+          </div>
+        </div>
+      ));
+    }
+
+    if (activeTab === 'friends') {
+      if (isFriendsLoading) return <FriendSkeleton />;
+      if (searchFilteredFreinds.length === 0) {
+        return (
+          <div className="flex flex-col items-center justify-center p-8 text-center">
+            <UserCheck className="size-16 text-base-content/30 mb-4" />
+            <h3 className="text-lg font-semibold mb-2">No Friends Yet</h3>
+            <p className="text-base-content/70 text-sm">
+              Add friends to start chatting with them
+            </p>
+          </div>
+        );
+      }
+      return searchFilteredFreinds.map((user) => (
+        <div
+          key={user._id}
+          className={`w-full p-3 flex items-center justify-between gap-3 hover:bg-base-300 transition-colors ${selectedUser?._id === user._id ? 'bg-base-300 ring-1 ring-base-300' : ''}`}
+        >
+          <button
+            onClick={() => {
+              setSelectedUser(user);
+              setIsSidebarOpen(false);
+            }}
+            className="flex items-center cursor-pointer gap-3 flex-1"
+          >
+            <div className='relative'>
+              <img
+                src={user?.profilePicture || '/avatar.png'}
+                alt={user?.fullName}
+                className='size-12 rounded-full object-cover ring-2 ring-primary'
+              />
+            </div>
+            <div className='text-left min-w-0'>
+              <div className='font-medium truncate'>{user.fullName}</div>
+              <div className='text-sm text-base-content/70'>
+                {onlineUsers.includes(user._id) ? "Online" : "Offline"}
+              </div>
+            </div>
+          </button>
+          <button className="btn btn-ghost btn-sm" title="Friend">
+            <UserCheck className="size-4 text-success" />
+          </button>
+        </div>
+      ));
+    }
+
+    if (activeTab === 'all') {
+      if (isUsersLoading) return <SidebarSkeleton />;
+      if (searchFilteredUsers.length === 0) {
+        return (
+          <div className="flex flex-col items-center justify-center p-8 text-center">
+            <Users className="size-16 text-base-content/30 mb-4" />
+            <h3 className="text-lg font-semibold mb-2">No Users Found</h3>
+            <p className="text-base-content/70 text-sm">
+              No users match your current filters
+            </p>
+          </div>
+        );
+      }
+      return searchFilteredUsers.map((user) => (
+        <div
+          key={user._id}
+          className={`w-full p-3 flex items-center justify-between gap-3 hover:bg-base-300 transition-colors ${selectedUser?._id === user._id ? 'bg-base-300 ring-1 ring-base-300' : ''}`}
+        >
+          <button
+            onClick={() => {
+              if (friends.some(friend => friend._id === user._id)) {
+                setSelectedUser(user);
+                setSelectedGroup(null);
+                setIsSidebarOpen(false);
+              } else {
+                toast.error("You can only chat with your friends. Send a friend request first!", {
+                  style: {
+                    background: 'hsl(var(--b1))',
+                    color: 'hsl(var(--bc))',
+                    borderColor: 'hsl(var(--er))',
+                    borderWidth: '2px',
+                    borderStyle: 'solid',
+                    borderRadius: '1rem',
+                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                  },
+                  icon: '❌',
+                  duration: 4000,
+                });
+              }
+            }}
+            className="flex items-center cursor-pointer gap-3 flex-1"
+          >
+            <div className='relative'>
+              <img
+                src={user?.profilePicture || '/avatar.png'}
+                alt={user?.fullName}
+                className='size-12 rounded-full object-cover ring-2 ring-primary'
+              />
+              <span
+                className={`absolute bottom-0 right-0 size-3 rounded-full ${onlineUsers.includes(user._id) && 'bg-success'
+                  }`}
+              />
+            </div>
+            <div className='text-left min-w-0'>
+              <div className='font-medium truncate'>{user.fullName}</div>
+              <div className='text-sm text-base-content/70'>
+                {onlineUsers.includes(user._id) ? "Online" : "Offline"}
+              </div>
+            </div>
+          </button>
+          {friends.some(friend => friend._id === user._id) ? (
+            <button className="btn btn-ghost btn-sm" title="Friend">
+              <UserCheck className="size-4 text-success" />
+            </button>
+          ) : isRequestSent(user._id) ? (
+            <button className="btn btn-ghost btn-sm" title="Friend Request Sent">
+              <Clock className="size-4 text-warning" />
+            </button>
+          ) : (
+            <button
+              onClick={() => handleSendFriendRequest(user._id)}
+              className="btn btn-ghost btn-sm"
+              title="Send Friend Request"
+              disabled={sendingRequestTo === user._id}
+            >
+              {sendingRequestTo === user._id ? (
+                <span className="loading loading-spinner loading-xs"></span>
+              ) : (
+                <UserPlus className="size-4" />
+              )}
+            </button>
+          )}
+        </div>
+      ));
+    }
+
+    return null; // fallback
+  };
 
   const sidebarContent = (
     <div className="flex flex-col h-full bg-base-200">
@@ -216,129 +394,8 @@ const Sidebar = () => {
       </div>
 
       <div className='overflow-y-auto w-full py-3'>
-        {activeTab === 'groups' ? (
-          isGroupsLoading ? (
-            <GroupSkeleton />
-          ) : (
-            searchFilteredGroups.length === 0 ? (
-              <div className="flex flex-col items-center justify-center p-8 text-center">
-                <UsersRound className="size-16 text-base-content/30 mb-4" />
-                <h3 className="text-lg font-semibold mb-2">No Groups Found</h3>
-                <p className="text-base-content/70 text-sm">
-                  Create a new group to start chatting
-                </p>
-              </div>
-            ) : (
-              searchFilteredGroups.map((group) => (
-                <div
-                  key={group._id}
-                  className="w-full p-3 flex items-center gap-3 hover:bg-base-300 transition-colors cursor-pointer"
-                  onClick={() => {
-                    setSelectedGroup(group);
-                    setIsSidebarOpen(false);
-                  }}
-                >
-                  <div className='relative'>
-                    <img
-                      src={group.groupPicture || '/avatar.png'}
-                      alt={group.name}
-                      className='size-12 rounded-full object-cover'
-                    />
-                  </div>
-                  <div className='text-left min-w-0'>
-                    <div className='font-medium truncate'>{group.name}</div>
-                    <div className='text-sm text-base-content/70'>
-                      {group.members.length} members
-                    </div>
-                  </div>
-                </div>
-              ))
-            )
-          )
-        ) : (
-          searchFilteredUsers.length === 0 ? (
-            <div className="flex flex-col items-center justify-center p-8 text-center">
-              <UserCheck className="size-16 text-base-content/30 mb-4" />
-              <h3 className="text-lg font-semibold mb-2">
-                {activeTab === 'friends' ? 'No Friends Yet' : 'No Users Found'}
-              </h3>
-              <p className="text-base-content/70 text-sm">
-                {activeTab === 'friends'
-                  ? 'Start adding friends to chat with them'
-                  : 'No users match your current filters'}
-              </p>
-            </div>
-          ) : (
-            searchFilteredUsers.map((user) => (
-              <div
-                key={user._id}
-                className={`w-full p-3 flex items-center justify-between gap-3 hover:bg-base-300 transition-colors ${selectedUser?._id === user._id ? 'bg-base-300 ring-1 ring-base-300' : ''}`}
-              >
-                <button
-                  onClick={() => {
-                    if (friends.some(friend => friend._id === user._id)) {
-                      setSelectedUser(user);
-                      setIsSidebarOpen(false); // Close sidebar on mobile after selection
-                    } else {
-                      toast.error("You can only chat with your friends. Send a friend request first!", {
-                        style: {
-                          background: 'hsl(var(--b1))',
-                          color: 'hsl(var(--bc))',
-                          borderColor: 'hsl(var(--er))',
-                          borderWidth: '2px',
-                          borderStyle: 'solid',
-                          borderRadius: '1rem',
-                          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                        },
-                        icon: '❌',
-                        duration: 4000,
-                      });
-                    }
-                  }}
-                  className="flex items-center cursor-pointer gap-3 flex-1"
-                >
-                  <div className='relative'>
-                    <img
-                      src={user?.profilePicture || '/avatar.png'}
-                      alt={user?.fullName}
-                      className='size-12 rounded-full object-cover ring-2 ring-primary'
-                    />
-                  </div>
-                  <div className='text-left min-w-0'>
-                    <div className='font-medium truncate'>{user.fullName}</div>
-                    <div className='text-sm text-base-content/70'>
-                      {onlineUsers.includes(user._id) ? "Online" : "Offline"}
-                    </div>
-                  </div>
-                </button>
-                {friends.some(friend => friend._id === user._id) ? (
-                  <button className="btn btn-ghost btn-sm" title="Friend">
-                    <UserCheck className="size-4 text-success" />
-                  </button>
-                ) : isRequestSent(user._id) ? (
-                  <button className="btn btn-ghost btn-sm" title="Friend Request Sent">
-                    <Clock className="size-4 text-warning" />
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => handleSendFriendRequest(user._id)}
-                    className="btn btn-ghost btn-sm"
-                    title="Send Friend Request"
-                    disabled={sendingRequestTo === user._id}
-                  >
-                    {sendingRequestTo === user._id ? (
-                      <span className="loading loading-spinner loading-xs"></span>
-                    ) : (
-                      <UserPlus className="size-4" />
-                    )}
-                  </button>
-                )}
-              </div>
-            ))
-          )
-        )}
+        {renderTabContent()}
       </div>
-
       <CreateGroupModal
         isOpen={isCreateGroupModalOpen}
         onClose={() => setIsCreateGroupModalOpen(false)}
@@ -357,6 +414,7 @@ const Sidebar = () => {
         {/* Hamburger Menu Button */}
         <button
           onClick={() => setIsSidebarOpen(true)}
+          hidden={!authUser}
           className="fixed top-4 left-4 z-50 btn btn-ghost btn-sm"
         >
           <Menu className="size-5" />

@@ -36,14 +36,15 @@ export const getGroups = asyncHandler(async (req, res, next) => {
   const groups = await Group.find({
     members: userId
   }).populate("members", "fullName profilePicture")
-    .populate("admins", "fullName profilePicture");
+    .populate("admins", "fullName profilePicture")
+    .sort({ createdAt: -1 });
 
   res.status(200).json(
     new ApiResponse(200, groups, "Groups fetched successfully")
   );
 });
 
-export const updateGroup = asyncHandler(async (req, res, next) => {
+export const updateGroup = asyncHandler(async (req, res) => {
   const { groupId } = req.params;
   const { name, description, groupPicture } = req.body;
   const group = await Group.findById(groupId);

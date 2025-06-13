@@ -44,7 +44,7 @@ const HomePage = () => {
         />
       </Helmet>
       <div className='h-screen bg-base-300'>
-        <div className='flex items-center justify-center pt-20 px-4'>
+        <div className='flex items-center justify-center pt-20 lg:px-4'>
           <div className='bg-base-100 rounded-lg shadow-cl w-full max-w-[90%] h-[calc(100vh-8rem)]'>
             <div className='flex h-full rounded-lg overflow-hidden'>
               <Sidebar />

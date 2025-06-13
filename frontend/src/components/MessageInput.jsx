@@ -180,8 +180,8 @@ const MessageInput = ({ isGroup = false }) => {
       }
       <div className='relative'>
         {showEmojiPicker && (
-          <div className='absolute bottom-full mb-2' ref={emojiPickerRef}>
-            <EmojiPicker onEmojiClick={onEmojiClick} theme='dark' />
+          <div className='absolute lg:right-0 bottom-full mb-2' ref={emojiPickerRef}>
+            <EmojiPicker className='!w-[400px] max-md:!w-[95%] max-md:!h-[350px]' onEmojiClick={onEmojiClick} theme='dark' />
           </div>
         )}
         <form onSubmit={handleSendMessage} className='flex items-center justify-center gap-2'>
@@ -198,32 +198,32 @@ const MessageInput = ({ isGroup = false }) => {
             />
             <input type="file" accept='image/*' ref={fileInputRef} className='hidden' onChange={handleImageChange} />
             <button
-              className={`btn btn-circle hover:bg-primary hover:text-primary-content ${showEmojiPicker ? 'bg-primary text-primary-content' : 'text-zinc-400'} flex items-center justify-center`}
+              className={`btn btn-circle max-md:w-8 max-md:h-8 hover:bg-primary hover:text-primary-content ${showEmojiPicker ? 'bg-primary text-primary-content' : 'text-zinc-400'} flex items-center justify-center`}
               type='button'
               onClick={() => setShowEmojiPicker(!showEmojiPicker)}
             >
-              <Smile size={20} />
+              <Smile className='size-[14px] lg:size-[20px]' />
             </button>
             <button
-              className={`btn btn-circle hover:bg-primary hover:text-primary-content ${imagePreview ? 'text-primary' : 'text-zinc-400'} flex items-center justify-center`}
+              className={`btn btn-circle max-md:w-8 max-md:h-8 hover:bg-primary hover:text-primary-content ${imagePreview ? 'text-primary' : 'text-zinc-400'} flex items-center justify-center`}
               type='button'
               onClick={() => fileInputRef.current?.click()}
             >
-              <Image size={20} />
+              <Image className='size-[14px] lg:size-[20px]' />
             </button>
           </div>
           <button
             type='submit'
-            className={`btn btn-primary flex items-center justify-center rounded-lg cursor-pointer disabled:cursor-not-allowed ${isSending ? 'relative' : ''}`}
+            className={`btn btn-primary max-md:w-10 max-md:p-0 max-md:h-8 flex items-center justify-center rounded-lg cursor-pointer disabled:cursor-not-allowed ${isSending ? 'relative' : ''}`}
             disabled={(!content.trim() && !imagePreview) || isSending}
           >
             {!isSending ? (
-              <Send className="size-[18px]" />
+              <Send className="size-[18px] max-md:size-[14px]" />
             ) : (
               <div className="flex items-center gap-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-primary-content animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                <div className="w-1.5 h-1.5 rounded-full bg-primary-content animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                <div className="w-1.5 h-1.5 rounded-full bg-primary-content animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                <div className="w-1.5 h-1.5 max-md:w-1 max-md:h-1 rounded-full bg-primary-content animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                <div className="w-1.5 h-1.5 max-md:w-1 max-md:h-1 rounded-full bg-primary-content animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                <div className="w-1.5 h-1.5 max-md:w-1 max-md:h-1 rounded-full bg-primary-content animate-bounce" style={{ animationDelay: '300ms' }}></div>
               </div>
             )}
           </button>

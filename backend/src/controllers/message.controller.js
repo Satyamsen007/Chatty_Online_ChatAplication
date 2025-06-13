@@ -5,7 +5,7 @@ import { uploadToCloudinary } from "../lib/cloudinary.js";
 import ApiResponse from "../helper/ApiResponse.js";
 import { getReceiverSocketId, io } from "../lib/socket.js";
 export const getUsersForSidebar = asyncHandler(async (req, res, next) => {
-    const users = await User.find({ _id: { $ne: req.user._id } }).select("-password");
+    const users = await User.find({ _id: { $ne: req.user._id } }).select("-password").sort({ createdAt: -1 });;
     res.status(200).json(new ApiResponse(200, users, "Users fetched successfully"));
 });
 

@@ -1,6 +1,4 @@
-import React from 'react';
-
-const GroupSkeleton = () => {
+const FriendSkeleton = () => {
   return (
     <div className="space-y-4 p-4">
       {[1, 2, 3, 4].map((item) => (
@@ -16,7 +14,7 @@ const GroupSkeleton = () => {
         </div>
       ))}
     </div>
-  );
-};
+  )
+}
 
-export default GroupSkeleton; 
+export default FriendSkeleton;
