@@ -15,7 +15,7 @@ const PREVIEW_MESSAGES = [
 ]
 
 const SettingsPage = () => {
-  const { theme, setTheme } = useThemeStore();
+  const { setTheme } = useThemeStore();
   return (
     <>
       <Helmet>
@@ -47,7 +47,7 @@ const SettingsPage = () => {
             <p className='text-sm text-base-content/70'>Choose a theme for your chat interface</p>
           </motion.div>
           <motion.div
-            className='grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2'
+            className='grid grid-cols-3 sm:grid-cols-6 md:grid-cols-8 gap-2'
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.5 }}

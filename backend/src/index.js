@@ -34,22 +34,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// Session middleware
-app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        httpOnly: true,
-        secure: process.env.NODE_ENV !== "development",
-        sameSite: process.env.NODE_ENV === "development" ? "lax" : "none",
-        maxAge: 24 * 60 * 60 * 1000
-    }
-}));
+
 
 // Initialize Passport and restore authentication state from session
 app.use(passport.initialize());
-app.use(passport.session());
 
 // API Routes - These should come before the static file serving
 app.use("/api/auth", authRoutes);

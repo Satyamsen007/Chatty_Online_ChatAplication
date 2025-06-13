@@ -174,7 +174,6 @@ export const googleAuth = asyncHandler(async (req, res, next) => {
 export const googleAuthCallback = (req, res, next) => {
     passport.authenticate('google', { failureRedirect: '/login', session: false }, async (err, user, info) => {
         if (err || !user) {
-            console.error('Google auth failed:', err || 'No user found');
             return res.redirect(`${process.env.FRONTEND_URL}/login?error=auth_failed`);
         }
 
@@ -185,13 +184,14 @@ export const googleAuthCallback = (req, res, next) => {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 sameSite: process.env.NODE_ENV === "development" ? "lax" : "none",
-                maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+                maxAge: 7 * 24 * 60 * 60 * 1000
             });
 
-            res.redirect(process.env.FRONTEND_URL);
+            return res.redirect(process.env.FRONTEND_URL);
         } catch (error) {
             console.error('Google auth error:', error);
-            res.redirect(`${process.env.FRONTEND_URL}/login?error=auth_failed`);
+            return res.redirect(`${process.env.FRONTEND_URL}/login?error=auth_failed`);
         }
     })(req, res, next);
 };
+

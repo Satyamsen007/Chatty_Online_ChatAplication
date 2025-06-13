@@ -517,8 +517,8 @@ const GroupDetailsModal = ({ isOpen, onClose, group }) => {
                             <Smile className="size-4" />
                           </button>
                           {showNameEmojiPicker && (
-                            <div className="absolute right-0 top-full mt-2 name-emoji-picker">
-                              <EmojiPicker onEmojiClick={(emojiObject) => onEmojiClick(emojiObject, setEditedName)} theme="dark" />
+                            <div className="absolute -right-2 top-full mt-2 name-emoji-picker">
+                              <EmojiPicker className='!w-[400px] max-md:!w-[300px] max-md:!h-[350px]' onEmojiClick={(emojiObject) => onEmojiClick(emojiObject, setEditedName)} theme="dark" />
                             </div>
                           )}
                         </div>
@@ -545,8 +545,8 @@ const GroupDetailsModal = ({ isOpen, onClose, group }) => {
                             <Smile className="size-4" />
                           </button>
                           {showDescEmojiPicker && (
-                            <div className="absolute right-0 top-full mt-2 desc-emoji-picker">
-                              <EmojiPicker onEmojiClick={(emojiObject) => onEmojiClick(emojiObject, setEditedDescription)} theme="dark" />
+                            <div className="absolute -right-2 top-full mt-2 desc-emoji-picker">
+                              <EmojiPicker className='!w-[400px] max-md:!w-[300px] max-md:!h-[350px]' onEmojiClick={(emojiObject) => onEmojiClick(emojiObject, setEditedDescription)} theme="dark" />
                             </div>
                           )}
                         </div>

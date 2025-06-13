@@ -206,8 +206,9 @@ const ProfilePage = () => {
                         <Smile className="w-5 h-5" />
                       </button>
                       {showEmojiPicker && (
-                        <div className='absolute right-0 top-full mt-2 z-10'>
+                        <div className='absolute -right-2 top-full mt-2 z-10'>
                           <EmojiPicker
+                            className='!w-[400px] max-md:!w-[300px] max-md:!h-[350px]'
                             onEmojiClick={onEmojiClick}
                             width={300}
                             height={400}
