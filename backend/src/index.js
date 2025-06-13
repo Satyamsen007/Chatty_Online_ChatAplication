@@ -18,6 +18,8 @@ dotenv.config();
 
 const PORT = process.env.PORT || 5003;
 
+app.set('trust proxy', 1);
+
 // CORS Configuration
 app.use(cors({
     origin: process.env.FRONTEND_URL,

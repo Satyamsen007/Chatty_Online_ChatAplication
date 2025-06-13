@@ -171,20 +171,16 @@ export const googleAuth = asyncHandler(async (req, res, next) => {
     })(req, res, next);
 });
 
-export const googleAuthCallback = asyncHandler(async (req, res, next) => {
-    passport.authenticate('google', {
-        failureRedirect: '/login',
-        session: false
-    })(req, res, async () => {
-        try {
-            const user = req.user;
-            if (!user) {
-                throw new Error('No user profile received from Google');
-            }
+export const googleAuthCallback = (req, res, next) => {
+    passport.authenticate('google', { failureRedirect: '/login', session: false }, async (err, user, info) => {
+        if (err || !user) {
+            console.error('Google auth failed:', err || 'No user found');
+            return res.redirect(`${process.env.FRONTEND_URL}/login?error=auth_failed`);
+        }
 
+        try {
             const token = generateToken(user._id);
 
-            // Set cookie and redirect to frontend
             res.cookie('token', token, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
@@ -197,5 +193,5 @@ export const googleAuthCallback = asyncHandler(async (req, res, next) => {
             console.error('Google auth error:', error);
             res.redirect(`${process.env.FRONTEND_URL}/login?error=auth_failed`);
         }
-    });
-});
+    })(req, res, next);
+};
