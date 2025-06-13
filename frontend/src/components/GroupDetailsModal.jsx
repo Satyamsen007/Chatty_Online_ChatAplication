@@ -474,7 +474,7 @@ const GroupDetailsModal = ({ isOpen, onClose, group }) => {
                     <img
                       src={previewUrl || group?.groupPicture || "/avatar.png"}
                       alt={group?.name}
-                      className="object-cover"
+                      className="object-contain"
                     />
                   </div>
                   {isEditing && (

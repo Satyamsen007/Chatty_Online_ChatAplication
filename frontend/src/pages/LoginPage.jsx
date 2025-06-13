@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useAuthStore } from '../store/useAuthStore';
-import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare, User, Github, ArrowRight } from 'lucide-react';
+import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import AuthImagePattern from '../components/AuthImagePattern';
 import toast from 'react-hot-toast';
@@ -10,7 +10,6 @@ import { Helmet } from 'react-helmet';
 
 const LoginPage = () => {
     const [showPassword, setShowPassword] = useState(false);
-    const [isGoogleLoading, setIsGoogleLoading] = useState(false);
     const { login, isLoggingIn } = useAuthStore();
     const [searchParams] = useSearchParams();
 
@@ -46,29 +45,6 @@ const LoginPage = () => {
 
     const onSubmit = async (data) => {
         await login(data);
-    }
-
-    const handleGoogleSignIn = async () => {
-        try {
-            setIsGoogleLoading(true);
-            const apiUrl = import.meta.env.VITE_API_URL;
-            window.location.href = `${apiUrl}/api/auth/google`;
-        } catch (error) {
-            toast.error("Failed to sign in with Google", {
-                style: {
-                    background: 'hsl(var(--b1))',
-                    color: 'hsl(var(--bc))',
-                    borderColor: 'hsl(var(--er))',
-                    borderWidth: '2px',
-                    borderStyle: 'solid',
-                    borderRadius: '1rem',
-                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                },
-                icon: '❌',
-                duration: 4000,
-            });
-            setIsGoogleLoading(false);
-        }
     }
 
     return (
@@ -194,54 +170,6 @@ const LoginPage = () => {
                                     </span>
                                 )}
                             </button>
-
-                            <div className='relative'>
-                                <div className='absolute inset-0 flex items-center'>
-                                    <div className='w-full border-t border-base-content/10'></div>
-                                </div>
-                                <div className='relative flex justify-center text-sm'>
-                                    <span className='px-2 bg-base-100 text-base-content/60'>Or continue with</span>
-                                </div>
-                            </div>
-
-                            <motion.button
-                                whileHover={{ backgroundColor: "hsl(var(--b2))" }}
-                                whileTap={{ scale: 0.98 }}
-                                type="button"
-                                onClick={handleGoogleSignIn}
-                                disabled={isGoogleLoading}
-                                className="btn btn-outline rounded-lg w-full h-12 text-lg font-medium flex items-center justify-center gap-3 transition-all duration-300 relative overflow-hidden group border-2 hover:border-primary"
-                            >
-                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-base-content/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
-                                {isGoogleLoading ? (
-                                    <div className="flex items-center justify-center gap-2">
-                                        <Loader2 className="size-5 animate-spin" />
-                                        <span>Connecting to Google...</span>
-                                    </div>
-                                ) : (
-                                    <>
-                                        <svg className="size-5 transition-transform duration-300" viewBox="0 0 24 24">
-                                            <path
-                                                fill="currentColor"
-                                                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                                            />
-                                            <path
-                                                fill="currentColor"
-                                                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                                            />
-                                            <path
-                                                fill="currentColor"
-                                                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                                            />
-                                            <path
-                                                fill="currentColor"
-                                                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                                            />
-                                        </svg>
-                                        <span className="relative">Sign in with Google</span>
-                                    </>
-                                )}
-                            </motion.button>
                         </motion.form>
 
                         <motion.div

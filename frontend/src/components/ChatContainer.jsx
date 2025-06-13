@@ -50,7 +50,7 @@ const ChatContainer = () => {
             >
               <div className='chat-image avatar'>
                 <div className='size-10 rounded-full border'>
-                  <img src={message.senderId === authUser._id ? authUser.profilePicture || '/avatar.png' : selectedUser.profilePicture || '/avatar.png'} alt='Profile Picture' />
+                  <img src={message.senderId === authUser._id ? authUser.profilePicture || '/avatar.png' : selectedUser.profilePicture || '/avatar.png'} alt='Profile Picture' className='size-full !object-contain' />
                 </div>
               </div>
               <div className='chat-header mb-1'>

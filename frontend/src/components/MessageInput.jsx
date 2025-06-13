@@ -170,7 +170,7 @@ const MessageInput = ({ isGroup = false }) => {
         imagePreview && (
           <div className='mb-3 flex items-center gap-2'>
             <div className='relative'>
-              <img src={imagePreview} alt="Preview" className='w-20 h-20 object-cover rounded-lg border border-zinc-700' />
+              <img src={imagePreview} alt="Preview" className='w-20 h-20 object-contain rounded-lg border border-zinc-700' />
               <button className='absolute -top-1.5 cursor-pointer -right-1.5 w-5 h-5 rounded-full bg-base-300 flex items-center justify-center' type='button' onClick={removeImage}>
                 <X className='size-3' />
               </button>

@@ -125,7 +125,7 @@ const Sidebar = () => {
             <img
               src={group.groupPicture || '/avatar.png'}
               alt={group.name}
-              className='size-12 rounded-full object-cover'
+              className='size-12 rounded-full object-contain'
             />
           </div>
           <div className='text-left min-w-0'>
@@ -167,7 +167,7 @@ const Sidebar = () => {
               <img
                 src={user?.profilePicture || '/avatar.png'}
                 alt={user?.fullName}
-                className='size-12 rounded-full object-cover ring-2 ring-primary'
+                className='size-12 rounded-full object-contain ring-2 ring-primary'
               />
             </div>
             <div className='text-left min-w-0'>
@@ -230,7 +230,7 @@ const Sidebar = () => {
               <img
                 src={user?.profilePicture || '/avatar.png'}
                 alt={user?.fullName}
-                className='size-12 rounded-full object-cover ring-2 ring-primary'
+                className='size-12 rounded-full object-contain ring-2 ring-primary'
               />
               <span
                 className={`absolute bottom-0 right-0 size-3 rounded-full ${onlineUsers.includes(user._id) && 'bg-success'
@@ -282,7 +282,7 @@ const Sidebar = () => {
             <img
               src={authUser?.profilePicture || '/avatar.png'}
               alt={authUser?.fullName}
-              className="size-20 rounded-full object-cover ring-4 ring-primary"
+              className="size-20 rounded-full object-contain ring-4 ring-primary"
             />
             <button onClick={() => navigate('/profile')} className="absolute cursor-pointer bottom-0 right-0 p-[6px] bg-primary text-primary-content rounded-full">
               <Pencil className="size-[14px]" />

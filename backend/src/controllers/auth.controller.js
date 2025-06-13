@@ -5,54 +5,8 @@ import { uploadToCloudinary } from "../lib/cloudinary.js";
 import cloudinary from "cloudinary";
 import { generateToken } from "../lib/utils.js";
 import User from "../models/user.model.js";
-import passport from 'passport';
-import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { configDotenv } from 'dotenv';
-
 configDotenv();
-
-// Configure Google Strategy
-passport.use(new GoogleStrategy({
-    clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: `${process.env.BACKEND_URL}/api/auth/google/callback`,
-    proxy: true
-}, async (accessToken, refreshToken, profile, done) => {
-    try {
-        // Check if user already exists
-        let user = await User.findOne({ email: profile.emails[0].value });
-
-        if (!user) {
-            // Create new user if doesn't exist
-            user = await User.create({
-                fullName: profile.displayName,
-                email: profile.emails[0].value,
-                profilePicture: profile.photos[0].value,
-                password: Math.random().toString(36).slice(-8), // Random password
-                isVerified: true // Google accounts are pre-verified
-            });
-        }
-
-        return done(null, user);
-    } catch (error) {
-        return done(error, null);
-    }
-}));
-
-// Serialize user for the session
-passport.serializeUser((user, done) => {
-    done(null, user.id);
-});
-
-// Deserialize user from the session
-passport.deserializeUser(async (id, done) => {
-    try {
-        const user = await User.findById(id);
-        done(null, user);
-    } catch (error) {
-        done(error, null);
-    }
-});
 
 export const signUp = asyncHandler(async (req, res, next) => {
     const { fullName, email, password } = req.body;
@@ -164,28 +118,4 @@ export const getCurrentUser = asyncHandler(async (req, res, next) => {
     const user = req.user;
     res.status(200).json(new ApiResponse(200, user, "Current user fetched successfully"));
 });
-
-export const googleAuth = asyncHandler(async (req, res, next) => {
-    passport.authenticate('google', {
-        scope: ['profile', 'email'],
-        prompt: 'select_account'
-    })(req, res, next);
-});
-
-export const googleAuthCallback = (req, res, next) => {
-    passport.authenticate('google', { failureRedirect: '/login', session: false }, async (err, user, info) => {
-        if (err || !user) {
-            return res.redirect(`${process.env.FRONTEND_URL}/login?error=auth_failed`);
-        }
-
-        try {
-            const token = generateToken(user._id);
-
-            return res.redirect(`${process.env.FRONTEND_URL}/auth/success?token=${token}`);
-        } catch (error) {
-            console.error('Google auth error:', error);
-            return res.redirect(`${process.env.FRONTEND_URL}/login?error=auth_failed`);
-        }
-    })(req, res, next);
-};
 

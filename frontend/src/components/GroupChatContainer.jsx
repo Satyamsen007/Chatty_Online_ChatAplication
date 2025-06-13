@@ -120,6 +120,7 @@ const GroupChatContainer = () => {
                       : message.senderId?.profilePicture || '/avatar.png'
                     }
                     alt='Profile Picture'
+                    className='size-full !object-contain'
                   />
                 </div>
               </div>
@@ -163,7 +164,7 @@ const GroupChatContainer = () => {
           <div className="chat chat-start">
             <div className='chat-image avatar'>
               <div className='size-10 rounded-full border'>
-                <img src={typingUser.profilePicture || '/avatar.png'} alt='Profile Picture' />
+                <img src={typingUser.profilePicture || '/avatar.png'} alt='Profile Picture' className='size-full !object-contain' />
               </div>
             </div>
             <div className='chat-header mb-1'>

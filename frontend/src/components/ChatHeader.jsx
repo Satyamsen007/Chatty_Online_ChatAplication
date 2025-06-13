@@ -35,10 +35,11 @@ const ChatHeader = ({ isGroup, image, members }) => {
           >
             {/* Avatar */}
             <div className="avatar">
-              <div className="size-10 rounded-full relative">
+              <div className="size-10 rounded-full border border-primary relative">
                 <img
                   src={isGroup ? (image || "/avatar.png") : (selectedUser.profilePicture || "/avatar.png")}
                   alt={isGroup ? "Group" : selectedUser.fullName}
+                  className='size-full !object-contain'
                 />
               </div>
             </div>

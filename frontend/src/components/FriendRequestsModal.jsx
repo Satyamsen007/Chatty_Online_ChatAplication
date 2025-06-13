@@ -47,7 +47,7 @@ const FriendRequestsModal = ({ isOpen, onClose }) => {
                   <img
                     src={request.senderId?.profilePicture || '/avatar.png'}
                     alt={request.senderId?.fullName || 'User'}
-                    className="size-10 rounded-full object-cover"
+                    className="size-10 rounded-full object-contain"
                   />
                   <div>
                     <p className="font-medium">{request.senderId?.fullName || 'Unknown User'}</p>

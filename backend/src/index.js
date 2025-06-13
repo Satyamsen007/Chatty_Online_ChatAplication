@@ -2,8 +2,6 @@ import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import session from "express-session";
-import passport from "passport";
 import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.route.js";
 import friendRequestRoutes from "./routes/friendRequest.route.js";
@@ -18,8 +16,6 @@ dotenv.config();
 
 const PORT = process.env.PORT || 5003;
 
-app.set('trust proxy', 1);
-
 // CORS Configuration
 app.use(cors({
     origin: process.env.FRONTEND_URL,
@@ -29,27 +25,10 @@ app.use(cors({
     exposedHeaders: ["Set-Cookie"],
 }));
 
-app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: process.env.NODE_ENV === "development" ? "lax" : "none",
-        maxAge: 24 * 60 * 60 * 1000 // 24 hours
-    }
-}));
-
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-
-
-
-// Initialize Passport and restore authentication state from session
-app.use(passport.initialize());
-app.use(passport.session());
 
 // API Routes - These should come before the static file serving
 app.use("/api/auth", authRoutes);
