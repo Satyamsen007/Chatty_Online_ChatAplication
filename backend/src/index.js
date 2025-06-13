@@ -49,6 +49,7 @@ app.use(cookieParser());
 
 // Initialize Passport and restore authentication state from session
 app.use(passport.initialize());
+app.use(passport.session());
 
 // API Routes - These should come before the static file serving
 app.use("/api/auth", authRoutes);

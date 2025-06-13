@@ -181,14 +181,7 @@ export const googleAuthCallback = (req, res, next) => {
         try {
             const token = generateToken(user._id);
 
-            res.cookie('token', token, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
-                sameSite: process.env.NODE_ENV === "development" ? "lax" : "none",
-                maxAge: 7 * 24 * 60 * 60 * 1000
-            });
-
-            return res.redirect(process.env.FRONTEND_URL);
+            return res.redirect(`${process.env.FRONTEND_URL}/auth/success?token=${token}`);
         } catch (error) {
             console.error('Google auth error:', error);
             return res.redirect(`${process.env.FRONTEND_URL}/login?error=auth_failed`);
