@@ -135,9 +135,6 @@ const ImagePreviewModal = ({ isOpen, onClose, imageUrl }) => {
                   transform: `scale(${scale}) rotate(${rotation}deg)`,
                   transition: 'transform 0.3s ease-in-out'
                 }}
-                drag
-                dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
-                dragElastic={0.1}
               />
             </div>
 
