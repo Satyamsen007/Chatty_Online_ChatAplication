@@ -96,24 +96,29 @@ We welcome contributions from the community! Here’s how you can get started:
 
 ```bash
 chatty/
-├── client/           # React frontend (Vite or CRA)
+├── frontend/           # React frontend (Vite or CRA)
 │   ├── public/
 │   ├── src/
-│   │   ├── assets/
 │   │   ├── components/
+│   │   ├── constants/
+│   │   ├── lib/
 │   │   ├── pages/
-│   │   ├── hooks/
 │   │   ├── store/
 │   │   ├── App.jsx
+│   │   ├── index.css
 │   │   └── main.jsx
-├── server/           # Express backend
-│   ├── controllers/
-│   ├── models/
-│   ├── routes/
-│   ├── middleware/
-│   ├── config/
-│   └── index.js
+├── backend/        # Express backend
+│   ├── src/ 
+│       ├── controllers/
+│       ├── helper/
+│       ├── lib/
+│       ├── middleware/
+│       ├── models/
+│       ├── routes/
+│       ├── seeds/
+│       └── index.js
 ├── .env
+├── .gitignore
+├── package-lock.json
 ├── package.json
-└── README.md
 
