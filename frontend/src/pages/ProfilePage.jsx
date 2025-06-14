@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { useAuthStore } from '../store/useAuthStore';
-import { Camera, Mail, User, Edit2, Check, X, Loader2, CheckCircle2, Smile } from 'lucide-react';
+import { Camera, Mail, User, Edit2, Check, X, Loader2, CheckCircle2, Smile, Trash2 } from 'lucide-react';
 import EmojiPicker from 'emoji-picker-react';
 import { motion } from 'framer-motion';
 import { Helmet } from "react-helmet";
+import { useNavigate } from 'react-router-dom';
 
 const ProfilePage = () => {
-  const { authUser, isUpdatingProfile, updateProfile } = useAuthStore();
+  const { authUser, isUpdatingProfile, updateProfile, deleteAccount } = useAuthStore();
   const [selectedImage, setSelectedImage] = useState(null);
   const [isEditingName, setIsEditingName] = useState(false);
   const [newFullName, setNewFullName] = useState('');
@@ -15,6 +16,10 @@ const ProfilePage = () => {
   const [showDone, setShowDone] = useState(false);
   const [isImageUploading, setIsImageUploading] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
+  const [deleteConfirmation, setDeleteConfirmation] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!isUpdatingProfile && isNameUpdating) {
@@ -273,7 +278,99 @@ const ProfilePage = () => {
                   <span className='text-green-500'>Active</span>
                 </div>
               </div>
+              <div className='mt-4 flex justify-end'>
+                <button
+                  onClick={() => setShowDeleteModal(true)}
+                  className='flex cursor-pointer items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors'
+                >
+                  <Trash2 className='w-5 h-5' />
+                  Delete Account
+                </button>
+              </div>
             </div>
+
+            {/* Delete Account Modal */}
+            {showDeleteModal && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{
+                  opacity: {
+                    duration: 0.3,
+                    ease: "easeInOut"
+                  }
+                }}
+                className='fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50'
+              >
+                <motion.div
+                  initial={{ scale: 0.95, opacity: 0, y: 20 }}
+                  animate={{ scale: 1, opacity: 1, y: 0 }}
+                  exit={{ scale: 0.95, opacity: 0, y: -20 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 260,
+                    damping: 20,
+                    duration: 0.3
+                  }}
+                  className='bg-base-300 rounded-xl p-6 max-w-md w-full space-y-4'
+                >
+                  <h3 className='text-xl font-semibold text-red-500 flex items-center gap-2'>
+                    <Trash2 className='w-6 h-6' />
+                    Delete Account
+                  </h3>
+                  <div className='space-y-3 text-sm text-red-400'>
+                    <p>
+                      Are you sure you want to permanently delete your account? This action cannot be undone.
+                    </p>
+                    <p>
+                      All your data, messages, and profile information will be permanently removed from our system.
+                    </p>
+                  </div>
+                  <div className='flex items-center gap-2'>
+                    <span className='text-sm text-red-400'>Type "DELETE" to confirm:</span>
+                    <input
+                      type="text"
+                      value={deleteConfirmation}
+                      onChange={(e) => setDeleteConfirmation(e.target.value)}
+                      className='flex-1 px-3 py-2 bg-base-200 rounded-lg border border-red-500 focus:outline-none focus:border-red-600'
+                    />
+                  </div>
+                  <div className='flex justify-end gap-3'>
+                    <button
+                      onClick={() => setShowDeleteModal(false)}
+                      className='px-4 cursor-pointer py-2 bg-base-200 rounded-lg hover:bg-base-300 transition-colors'
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={async () => {
+                        if (deleteConfirmation.toLowerCase() === 'delete') {
+                          setIsDeletingAccount(true);
+                          try {
+                            await deleteAccount();
+                            navigate('/login');
+                          } catch (error) {
+                            setIsDeletingAccount(false);
+                          }
+                        }
+                      }}
+                      className='px-4 py-2 bg-red-600 cursor-pointer text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
+                      disabled={deleteConfirmation.toLowerCase() !== 'delete' || isDeletingAccount}
+                    >
+                      {isDeletingAccount ? (
+                        <span className='flex items-center gap-2'>
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                          Deleting...
+                        </span>
+                      ) : (
+                        'Delete Account'
+                      )}
+                    </button>
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
           </motion.div>
         </div>
       </motion.div>

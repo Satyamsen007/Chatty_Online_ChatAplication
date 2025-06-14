@@ -69,7 +69,6 @@ export const login = asyncHandler(async (req, res, next) => {
         .json(new ApiResponse(200, user, "User logged in successfully"));
 });
 
-
 export const logout = asyncHandler(async (req, res, next) => {
     res.clearCookie('token', {
         httpOnly: true,
@@ -117,5 +116,30 @@ export const updateProfile = asyncHandler(async (req, res, next) => {
 export const getCurrentUser = asyncHandler(async (req, res, next) => {
     const user = req.user;
     res.status(200).json(new ApiResponse(200, user, "Current user fetched successfully"));
+});
+
+export const deleteAccount = asyncHandler(async (req, res, next) => {
+    const userId = req.user._id;
+    const user = await User.findById(userId);
+    if (!user) {
+        return next(new ApiError(404, "User not found"));
+    }
+    if (user?.profilePicture && user.profilePicture.includes('cloudinary')) {
+        try {
+            const publicId = user.profilePicture.split('/').slice(-1)[0].split('.')[0];
+            await cloudinary.uploader.destroy(publicId);
+        } catch (error) {
+            console.error('Error deleting profile picture:', error);
+            return next(new ApiError(500, "Error deleting profile picture"));
+        }
+    }
+    await User.findByIdAndDelete(userId);
+    res.status(200)
+        .clearCookie('token', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV !== "development",
+            sameSite: process.env.NODE_ENV === "development" ? "lax" : "none",
+        })
+        .json(new ApiResponse(200, user, "Account deleted successfully"));
 });
 

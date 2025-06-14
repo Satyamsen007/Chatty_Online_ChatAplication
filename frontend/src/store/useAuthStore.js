@@ -169,6 +169,50 @@ export const useAuthStore = create((set, get) => ({
         }
     },
 
+    deleteAccount: async () => {
+        try {
+            // First disconnect the socket
+            get().disconnectSocket();
+
+            // Then make the delete request
+            await axiosInstance.delete('/auth/delete-account');
+
+            // Clear auth user state
+            set({ authUser: null });
+
+            // Show success toast
+            toast.success("Account deleted successfully", {
+                style: {
+                    background: 'hsl(var(--b1))',
+                    color: 'hsl(var(--bc))',
+                    borderColor: 'hsl(var(--p))',
+                    borderWidth: '2px',
+                    borderStyle: 'solid',
+                    borderRadius: '1rem',
+                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                },
+                icon: '🗑️',
+                duration: 3000,
+            });
+
+        } catch (error) {
+            console.error('Error deleting account:', error.response?.data || error);
+            toast.error(error.response.data.message || "Failed to delete account", {
+                style: {
+                    background: 'hsl(var(--b1))',
+                    color: 'hsl(var(--bc))',
+                    borderColor: 'hsl(var(--er))',
+                    borderWidth: '2px',
+                    borderStyle: 'solid',
+                    borderRadius: '1rem',
+                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                },
+                icon: '❌',
+                duration: 4000,
+            });
+        }
+    },
+
     connectSocket: async () => {
         const { authUser } = get();
         const currentSocket = get().socket;
