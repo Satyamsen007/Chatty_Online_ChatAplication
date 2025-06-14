@@ -313,33 +313,33 @@ const ProfilePage = () => {
                     damping: 20,
                     duration: 0.3
                   }}
-                  className='bg-base-300 rounded-xl p-6 max-w-md w-full space-y-4'
+                  className='bg-base-300 rounded-xl p-4 md:p-6 max-w-sm md:max-w-md w-full space-y-4'
                 >
-                  <h3 className='text-xl font-semibold text-red-500 flex items-center gap-2'>
+                  <h3 className='text-xl md:text-2xl font-semibold text-red-500 flex items-center gap-2'>
                     <Trash2 className='w-6 h-6' />
                     Delete Account
                   </h3>
                   <div className='space-y-3 text-sm text-red-400'>
-                    <p>
+                    <p className='text-xs md:text-sm'>
                       Are you sure you want to permanently delete your account? This action cannot be undone.
                     </p>
-                    <p>
+                    <p className='text-xs md:text-sm'>
                       All your data, messages, and profile information will be permanently removed from our system.
                     </p>
                   </div>
-                  <div className='flex items-center gap-2'>
-                    <span className='text-sm text-red-400'>Type "DELETE" to confirm:</span>
+                  <div className='flex flex-col md:flex-row items-start md:items-center gap-2'>
+                    <span className='text-xs md:text-sm text-red-400'>Type "DELETE" to confirm:</span>
                     <input
                       type="text"
                       value={deleteConfirmation}
                       onChange={(e) => setDeleteConfirmation(e.target.value)}
-                      className='flex-1 px-3 py-2 bg-base-200 rounded-lg border border-red-500 focus:outline-none focus:border-red-600'
+                      className='flex-1 px-3 py-2 bg-base-200 rounded-lg border border-red-500 focus:outline-none focus:border-red-600 text-xs md:text-sm'
                     />
                   </div>
-                  <div className='flex justify-end gap-3'>
+                  <div className='flex flex-col md:flex-row justify-end gap-3'>
                     <button
                       onClick={() => setShowDeleteModal(false)}
-                      className='px-4 cursor-pointer py-2 bg-base-200 rounded-lg hover:bg-base-300 transition-colors'
+                      className='px-4 py-2 text-xs md:text-sm bg-base-200 rounded-lg hover:bg-base-300 transition-colors'
                     >
                       Cancel
                     </button>
@@ -355,12 +355,12 @@ const ProfilePage = () => {
                           }
                         }
                       }}
-                      className='px-4 py-2 bg-red-600 cursor-pointer text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
+                      className='px-4 py-2 text-xs md:text-sm bg-red-600 cursor-pointer text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
                       disabled={deleteConfirmation.toLowerCase() !== 'delete' || isDeletingAccount}
                     >
                       {isDeletingAccount ? (
                         <span className='flex items-center gap-2'>
-                          <Loader2 className="w-5 h-5 animate-spin" />
+                          <Loader2 className="w-4 h-4 md:w-5 md:h-5 animate-spin" />
                           Deleting...
                         </span>
                       ) : (
