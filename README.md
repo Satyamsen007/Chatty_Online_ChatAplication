@@ -73,13 +73,6 @@ Whether you're on desktop or mobile, Chatty adapts beautifully to all screen siz
 
 ---
 
-## 📄 License
-
-This project is licensed under the **MIT License**.  
-See the [LICENSE](./LICENSE) file for full details.
-
----
-
 ## 🤝 Contribution
 
 We welcome contributions from the community! Here’s how you can get started:
