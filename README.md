@@ -67,8 +67,7 @@ Whether you're on desktop or mobile, Chatty adapts beautifully to all screen siz
 
 **Satyam Sen**
 
-- 🌐 [Portfolio](https://satyamsen.dev)  
-- 📸 [Instagram](https://www.instagram.com/codekajugaad.dev/)  
+- 🌐 [Portfolio](https://satyamsen.dev) 
 - 💼 [LinkedIn](www.linkedin.com/in/satyam-sen-web-dev)
 
 ---
